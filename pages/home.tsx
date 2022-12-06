@@ -35,6 +35,9 @@ export default function home() {
 	const [generalPostList, setGeneralPostList] = useState<PostType[]>([]);
 	const [balance, setBalance] = useState<string>("0");
 
+	const sleep = async (ms: number) => {
+		await new Promise((r) => setTimeout(r, ms));
+	};
 	useEffect(() => {
 		connectToContract({
 			api: api,
@@ -46,6 +49,10 @@ export default function home() {
 			setActingAccount: setActingAccount!,
 			setIsSetup: setIsSetup,
 		});
+		sleep(500);
+	}, []);
+
+	useEffect(() => {
 		if (!isSetup) return;
 		getProfileForHome({
 			api: api!,

@@ -41,7 +41,9 @@ export default function message() {
 	const [isSetup, setIsSetup] = useState(false);
 	const [profile, setProfile] = useState<ProfileType>();
 	const [balance, setBalance] = useState<string>("0");
-
+	const sleep = async (ms: number) => {
+		await new Promise((r) => setTimeout(r, ms));
+	};
 	useEffect(() => {
 		//connect to contract
 		connectToContract({
@@ -54,6 +56,9 @@ export default function message() {
 			setActingAccount: setActingAccount!,
 			setIsSetup: setIsSetup,
 		});
+		sleep(500);
+	}, []);
+	useEffect(() => {
 		if (!isSetup) return;
 
 		// get profile
@@ -104,21 +109,21 @@ export default function message() {
 				id: idList![i],
 			});
 			if (idList !== null) {
-				lastMessage = await getLastMessage({
+				lastMessage = (await getLastMessage({
 					api: api,
 					id: idList![i],
-				});
+				})) as string;
 			}
 			let memberListFactor = (
 				<MessageMember
 					name={friendProfile?.name}
 					img_url={friendProfile?.imgUrl}
-					last_message={lastMessage}
+					last_message={lastMessage!}
 					setShowMessageModal={setShowMessageModal}
 					setUserName={setUserName}
 					setUserImgUrl={setUserImgUrl}
 					setMyImgUrl={setMyImgUrl}
-					messageListId={idList[i]}
+					messageListId={idList![i]}
 					setMessageListId={setMessageListId}
 					setMessageList={setMessageList}
 					messageList={messageList}

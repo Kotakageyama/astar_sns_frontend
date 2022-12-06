@@ -40,6 +40,9 @@ export default function profile(props: any) {
 	const [followerList, setFollowerList] = useState<Array<string>>([]);
 	const [balance, setBalance] = useState<string>("0");
 
+	const sleep = async (ms: number) => {
+		await new Promise((r) => setTimeout(r, ms));
+	};
 	useEffect(() => {
 		connectToContract({
 			api: api,
@@ -51,6 +54,9 @@ export default function profile(props: any) {
 			setActingAccount: setActingAccount!,
 			setIsSetup: setIsSetup,
 		});
+		sleep(500);
+	}, []);
+	useEffect(() => {
 		if (!isSetup) return;
 		getProfileForProfile({
 			api: api,

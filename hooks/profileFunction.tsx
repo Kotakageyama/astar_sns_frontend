@@ -98,7 +98,7 @@ const imageUrlForUnknown = process.env.NEXT_PUBLIC_UNKNOWN_IMAGE_URL as string;
 export const checkCreatedInfo = async (props: PropsCCI) => {
 	const contract = new ContractPromise(props.api!, abi, contractAddress);
 	const { gasConsumed, result, output } =
-		await contract.query.checkCreatedInfo(
+		await contract.query.checkCreatedProfile(
 			"",
 			{
 				value: 0,
@@ -163,6 +163,7 @@ export const getProfileForProfile = async (props: PropsGPFP) => {
 		props.userId
 	);
 	if (output !== undefined && output !== null) {
+		console.log(`LOG:${output.toHuman()!.imgUrl as string}`);
 		props.setImgUrl(
 			output.toHuman()?.imgUrl == null
 				? imageUrlForUnknown
