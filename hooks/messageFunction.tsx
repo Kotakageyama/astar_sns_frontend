@@ -51,7 +51,7 @@ export const sendMessage = async (props: PropsSM) => {
 		},
 		props.message,
 		props.id,
-		[date.getMonth() + 1, date.getDate].join("-") +
+		[date.getMonth() + 1, date.getDate()].join("-") +
 			" " +
 			[
 				date.getHours().toString().padStart(2, "0"),
