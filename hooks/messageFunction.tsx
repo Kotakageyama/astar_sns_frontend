@@ -94,6 +94,6 @@ export const getLastMessage = async (props: PropsGLM) => {
 		props.id
 	);
 	if (output !== undefined && output !== null) {
-		return output.toHuman()?.toString() ?? "";
+		return output.toHuman()?.message?.toString() ?? "";
 	}
 };
