@@ -57,12 +57,15 @@ export default function profile(props: any) {
 		sleep(500);
 	}, []);
 	useEffect(() => {
+		sleep(1000);
+		console.log(`LOG: isSetup ${isSetup}`);
 		if (!isSetup) return;
 		getProfileForProfile({
 			api: api,
 			userId: actingAccount?.address,
 			setImgUrl: setImgUrl,
 			setName: setName,
+			setIsCreatedFnRun: setIsCreatedFnRun,
 		});
 		getIndividualPost({
 			api: api,
@@ -84,14 +87,17 @@ export default function profile(props: any) {
 			actingAccount: actingAccount!,
 			setBalance: setBalance,
 		});
-		if (isCreatedFnRun) return;
+		// if (isCreatedFnRun) return;
 		checkCreatedInfo({
 			api: api,
 			userId: actingAccount?.address!,
 			setIsCreatedProfile: setIsCreatedProfile,
+			actingAccount: actingAccount!,
 		});
-		if (isCreatedProfile) return;
-		createProfile({ api: api, actingAccount: actingAccount! });
+		sleep(2000);
+		console.log(`LOG: createdProfile ${isCreatedProfile}`);
+		// if (isCreatedProfile) return;
+		// createProfile({ api: api, actingAccount: actingAccount! });
 		setIsCreatedFnRun(true);
 	}, [actingAccount]);
 
@@ -106,6 +112,7 @@ export default function profile(props: any) {
 					setImgUrl={setImgUrl}
 					setName={setName}
 					actingAccount={actingAccount}
+					setIsCreatedFnRun={setIsCreatedFnRun}
 				/>
 				<TopBar
 					idList={accountList}

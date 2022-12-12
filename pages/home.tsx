@@ -53,11 +53,14 @@ export default function home() {
 	}, []);
 
 	useEffect(() => {
+		sleep(1000);
+		console.log(`setup done: ${isSetup}`);
 		if (!isSetup) return;
 		getProfileForHome({
 			api: api!,
 			userId: actingAccount?.address!,
 			setImgUrl: setImgUrl,
+			setIsCreatedFnRun: setIsCreatedFnRun,
 		});
 		balenceOf({
 			api: api,
@@ -76,9 +79,11 @@ export default function home() {
 			api: api,
 			userId: actingAccount?.address!,
 			setIsCreatedProfile: setIsCreatedProfile,
+			actingAccount: actingAccount!,
 		});
-		if (isCreatedProfile) return;
-		createProfile({ api: api, actingAccount: actingAccount! });
+		console.log(`LOG: createdProfile ${isCreatedProfile}`);
+		// if (isCreatedProfile) return;
+		// createProfile({ api: api, actingAccount: actingAccount! });
 		setIsCreatedFnRun(true);
 	}, [actingAccount]);
 

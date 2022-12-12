@@ -14,6 +14,9 @@ type Props = {
 
 export const SmallerProfileIcon: FC<Props> = (props: Props) => {
 	const implementFollow = async () => {
+		console.log(
+			`LOG: follow actingAccount ${props.actingAccount.address}, followedId ${props.userId}`
+		);
 		if (confirm("Would you like to follow this account?")) {
 			await follow({
 				api: props.api,

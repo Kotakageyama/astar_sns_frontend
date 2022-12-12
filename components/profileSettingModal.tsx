@@ -13,6 +13,7 @@ type Props = {
 	setImgUrl: Dispatch<React.SetStateAction<string>>;
 	setName: Dispatch<React.SetStateAction<string>>;
 	actingAccount: InjectedAccountWithMeta | undefined;
+	setIsCreatedFnRun: Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function ProfileSettingModal(props: Props) {
@@ -29,6 +30,7 @@ export default function ProfileSettingModal(props: Props) {
 			userId: props.actingAccount?.address,
 			setImgUrl: props.setImgUrl,
 			setName: props.setName,
+			setIsCreatedFnRun: props.setIsCreatedFnRun,
 		});
 		props.afterOpenFn(false);
 		alert(

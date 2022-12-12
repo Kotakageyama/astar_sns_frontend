@@ -59,6 +59,7 @@ export default function message() {
 		sleep(500);
 	}, []);
 	useEffect(() => {
+		sleep(10000);
 		if (!isSetup) return;
 
 		// get profile
@@ -69,6 +70,7 @@ export default function message() {
 			setMyImgUrl: setMyImgUrl,
 			setFriendList: setFriendList,
 			setProfile: setProfile,
+			setIsCreatedFnRun: setIsCreatedFnRun,
 		});
 		// create message member list UI
 		createMessageMemberList();
@@ -80,17 +82,18 @@ export default function message() {
 		});
 
 		// check if already created profile in frontend
-		if (isCreatedFnRun) return;
+		// if (isCreatedFnRun) return;
 
 		// check if already created profile in contract
 		checkCreatedInfo({
 			api: api,
 			userId: actingAccount?.address,
 			setIsCreatedProfile: setIsCreatedProfile,
+			actingAccount: actingAccount!,
 		});
-		if (isCreatedProfile) return;
-		// create profile
-		createProfile({ api: api, actingAccount: actingAccount! });
+		// if (isCreatedProfile) return;
+		// // create profile
+		// createProfile({ api: api, actingAccount: actingAccount! });
 		setIsCreatedFnRun(true);
 	}, [actingAccount]);
 
