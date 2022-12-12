@@ -37,7 +37,9 @@ export const connectToContract = async (props: Props) => {
 
 	// コントラクトに接続
 	const wsProvider = new WsProvider(blockchainUrl);
+	console.log(`LOG: contract connect: ${blockchainUrl}`);
 	const connectedApi = await ApiPromise.create({ provider: wsProvider });
 	props.setApi(connectedApi);
 	await extensionSetup();
+	console.log(`LOG: setup done: setissetup: true`);
 };

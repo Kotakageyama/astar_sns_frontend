@@ -51,6 +51,7 @@ const contractAddress: string = process.env
 // release post function
 export const releasePost = async (props: PropsRP) => {
 	const { web3FromSource } = await import("@polkadot/extension-dapp");
+	console.log(`contractAddress: ${contractAddress}`);
 	const contract = new ContractPromise(props.api, abi, contractAddress);
 	const performingAccount = props.actingAccount;
 	const injector = await web3FromSource(performingAccount.meta.source);

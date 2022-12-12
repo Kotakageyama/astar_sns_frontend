@@ -16,6 +16,7 @@ type Props = {
 };
 
 const Header: FC<Props> = (props: Props) => {
+	console.log("header: imgUrl: " + props.imgUrl);
 	return (
 		<div className="bg-[#ADE9F6] h-24 w-full flex items-center justify-center">
 			<AppLogo />

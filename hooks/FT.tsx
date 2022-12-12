@@ -26,6 +26,7 @@ const contractAddress: string = process.env
 	.NEXT_PUBLIC_CONTRACT_ADDRESS as string;
 
 export const balenceOf = async (props: PropsBO) => {
+	console.log(`contractAddress: ${contractAddress}`);
 	const contract = new ContractPromise(props.api!, abi, contractAddress);
 	const { gasConsumed, result, output } = await contract.query.balanceOf(
 		"",

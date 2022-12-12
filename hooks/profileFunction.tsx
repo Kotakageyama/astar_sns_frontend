@@ -2,6 +2,7 @@ import { ApiPromise } from "@polkadot/api";
 import { ContractPromise } from "@polkadot/api-contract";
 import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 import { Dispatch } from "react";
+import { AnyJson } from "@polkadot/types/types";
 
 import abi from "../metadata.json";
 
@@ -22,6 +23,7 @@ type PropsCCI = {
 	api: ApiPromise | undefined;
 	userId: string | undefined;
 	setIsCreatedProfile: Dispatch<React.SetStateAction<boolean>>;
+	actingAccount: InjectedAccountWithMeta;
 };
 
 // type for createProoject function
@@ -35,6 +37,7 @@ type PropsGPFH = {
 	api: ApiPromise;
 	userId: string;
 	setImgUrl: Dispatch<React.SetStateAction<string>>;
+	setIsCreatedFnRun: Dispatch<React.SetStateAction<boolean>>;
 };
 
 // type for getProfileForProfile function
@@ -43,6 +46,7 @@ type PropsGPFP = {
 	userId: string | undefined;
 	setImgUrl: Dispatch<React.SetStateAction<string>>;
 	setName: Dispatch<React.SetStateAction<string>>;
+	setIsCreatedFnRun: Dispatch<React.SetStateAction<boolean>>;
 };
 
 // type for getProfileForMessage function
@@ -53,6 +57,7 @@ type PropsGPFM = {
 	setMyImgUrl: Dispatch<React.SetStateAction<string>>;
 	setFriendList: Dispatch<React.SetStateAction<never[]>>;
 	setProfile: Dispatch<React.SetStateAction<ProfileType | undefined>>;
+	setIsCreatedFnRun: Dispatch<React.SetStateAction<boolean>>;
 };
 
 // type for getSimpleProfileForMessage function
@@ -96,6 +101,7 @@ const imageUrlForUnknown = process.env.NEXT_PUBLIC_UNKNOWN_IMAGE_URL as string;
 
 // check if already create profile in contract function
 export const checkCreatedInfo = async (props: PropsCCI) => {
+	console.log(`contractAddress: ${contractAddress}`);
 	const contract = new ContractPromise(props.api!, abi, contractAddress);
 	const { gasConsumed, result, output } =
 		await contract.query.checkCreatedProfile(
@@ -106,14 +112,43 @@ export const checkCreatedInfo = async (props: PropsCCI) => {
 			},
 			props.userId
 		);
+	const { web3FromSource } = await import("@polkadot/extension-dapp");
+	const performingAccount = props.actingAccount;
+	const injector = await web3FromSource(performingAccount.meta.source);
+	const create_profile = await contract.tx.createProfile({
+		value: 0,
+		gasLimit: 18750000000,
+	});
+	console.log(
+		`LOG:checkCreatedProfile: output not undefined ${
+			output !== undefined
+		}, output not null ${output !== null}, address: ${
+			props.userId
+		}, check is ${output?.toHuman()}`
+	);
 	if (output !== undefined && output !== null) {
 		props.setIsCreatedProfile(output.toHuman());
+		if (!output.toHuman()) {
+			if (injector !== undefined) {
+				create_profile.signAndSend(
+					performingAccount.address,
+					{ signer: injector.signer },
+					(result) => {}
+				);
+			}
+		}
 	}
+	// if (output === null) {
+	// 	console.log(`LOG: setIsCreatedProfile false`);
+	// 	props.setIsCreatedProfile(false);
+	// }
 };
 
 // create profile function
 export const createProfile = async (props: PropsCP) => {
-	console.log(props.actingAccount);
+	console.log(
+		`LOG: createProfile: now actingAccount is ${props.actingAccount}`
+	);
 	const { web3FromSource } = await import("@polkadot/extension-dapp");
 	const contract = new ContractPromise(props.api!, abi, contractAddress);
 	const performingAccount = props.actingAccount;
@@ -133,6 +168,7 @@ export const createProfile = async (props: PropsCP) => {
 
 // get profile for home screen function
 export const getProfileForHome = async (props: PropsGPFH) => {
+	console.log(`contractAddress${contractAddress}`);
 	const contract = new ContractPromise(props.api, abi, contractAddress);
 	const { gasConsumed, result, output } = await contract.query.getProfileInfo(
 		"",
@@ -142,13 +178,40 @@ export const getProfileForHome = async (props: PropsGPFH) => {
 		},
 		props.userId
 	);
+	console.log(
+		`LOG: getProfile. ${props.api}, ${abi}, ${contractAddress}, ${props.userId} `
+	);
+	console.log(
+		output?.toHuman()?.imgUrl?.toString(),
+		imageUrlForUnknown,
+		output,
+		result,
+		gasConsumed
+	);
+	console.log(`LOG:output is ${output?.toHuman()}`);
+	console.log(
+		`LOG:output not undefined ${output !== undefined}, output not null ${
+			output !== null
+		}`
+	);
 	if (output !== undefined && output !== null) {
+		console.log(
+			`LOG: setImgUrl: ${
+				(output.toHuman()?.imgUrl?.toString(),
+				output.toHuman()?.imgUrl?.toString() == null)
+			}`
+		);
 		props.setImgUrl(
 			output.toHuman()?.imgUrl == null
 				? imageUrlForUnknown
-				: output.toHuman()?.imgUrl.toString()
+				: output.toHuman()?.imgUrl.toString()!
 		);
 	}
+	// if (output === null) {
+	// 	console.log(`LOG: setIsCreatedFnRun false`);
+	// 	props.setIsCreatedFnRun(false);
+	// 	props.setImgUrl(imageUrlForUnknown);
+	// }
 };
 
 // get profile for profile screen function
@@ -162,8 +225,9 @@ export const getProfileForProfile = async (props: PropsGPFP) => {
 		},
 		props.userId
 	);
+	console.log(`LOG:output is ${output?.toHuman()?.imgUrl?.toString()}`);
 	if (output !== undefined && output !== null) {
-		console.log(`LOG:${output.toHuman()!.imgUrl as string}`);
+		console.log(`LOG:${output.toHuman()?.imgUrl}`);
 		props.setImgUrl(
 			output.toHuman()?.imgUrl == null
 				? imageUrlForUnknown
@@ -199,12 +263,24 @@ export const getProfileForMessage = async (props: PropsGPFM) => {
 				? imageUrlForUnknown
 				: output.toHuman()?.imgUrl.toString()
 		);
+		console.log(
+			`setFriendList: ${
+				output.toHuman()?.friendList
+			}, profile: ${output.toHuman()}`
+		);
 		props.setFriendList(
 			output.toHuman()?.friendList == null
 				? []
 				: output.toHuman()?.friendList
 		);
 		props.setProfile(output.toHuman());
+	}
+	if (output === null) {
+		console.log(`LOG: setIsCreatedFnRun false`);
+		props.setIsCreatedFnRun(false);
+		props.setMyImgUrl(imageUrlForUnknown);
+		props.setImgUrl(imageUrlForUnknown);
+		props.setFriendList([]);
 	}
 };
 
@@ -265,6 +341,11 @@ export const setProfileInfo = async (props: PropSPI) => {
 			performingAccount!.address,
 			{ signer: injector.signer },
 			(result) => {}
+		);
+		console.log(
+			`LOG: set_profile_info: signAndSend, ${
+				performingAccount!.address
+			}, ${props.name}, ${props.imgUrl}`
 		);
 	}
 };
