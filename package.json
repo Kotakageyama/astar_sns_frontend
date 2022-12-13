@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@polkadot/api": "^9.10.1",
-    "@polkadot/api-contract": "^9.10.1",
+    "@polkadot/api": "^9.10.2",
+    "@polkadot/api-contract": "^9.10.2",
     "@polkadot/extension-dapp": "^0.44.6",
     "@polkadot/extension-inject": "^0.44.6",
     "@types/node": "18.11.10",
