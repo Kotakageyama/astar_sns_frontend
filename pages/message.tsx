@@ -41,6 +41,7 @@ export default function message() {
 	const [isSetup, setIsSetup] = useState(false);
 	const [profile, setProfile] = useState<ProfileType>();
 	const [balance, setBalance] = useState<string>("0");
+	const [isSetFriendList, setIsSetFriendList] = useState(false);
 	const sleep = async (ms: number) => {
 		await new Promise((r) => setTimeout(r, ms));
 	};
@@ -58,8 +59,9 @@ export default function message() {
 		});
 		sleep(500);
 	}, []);
+
 	useEffect(() => {
-		sleep(10000);
+		sleep(1000);
 		if (!isSetup) return;
 
 		// get profile
@@ -72,8 +74,6 @@ export default function message() {
 			setProfile: setProfile,
 			setIsCreatedFnRun: setIsCreatedFnRun,
 		});
-		// create message member list UI
-		createMessageMemberList();
 
 		balenceOf({
 			api: api,
@@ -97,9 +97,15 @@ export default function message() {
 		setIsCreatedFnRun(true);
 	}, [actingAccount]);
 
+	useEffect(() => {
+		createMessageMemberList();
+		console.log("create message member list", friendList);
+	}, [friendList]);
+
 	// create message member list UI
 	const createMessageMemberList = async () => {
 		let memberList: Array<any> = new Array();
+		console.log("LOG: friendList", friendList);
 		for (var i = 0; i < friendList.length; i++) {
 			let friendProfile = await getSimpleProfileForMessage({
 				api: api,

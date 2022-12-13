@@ -295,7 +295,11 @@ export const getSimpleProfileForMessage = async (props: PropsGSPFM) => {
 		},
 		props.userId
 	);
+	console.log(
+		`getSimpleProfileForMessage:${output !== undefined} ${output !== null}`
+	);
 	if (output !== undefined && output !== null) {
+		console.log(`getSimpleProfileFroMessage: ${output.toHuman()}`);
 		return output.toHuman();
 	}
 	return;
