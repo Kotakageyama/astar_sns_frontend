@@ -7,6 +7,10 @@ https://app.unchain.tech/learn/ASTAR-SocialFi
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## 成果物
+![astar_sns_frontend](https://user-images.githubusercontent.com/27982108/212523382-c2c28bad-1ca7-4cf0-a4a3-4093a1f3d02f.gif)
+
+
 ## Getting Started
 
 First, run the development server:
